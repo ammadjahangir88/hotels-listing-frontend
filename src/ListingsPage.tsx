@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import Header from "./header";
 import ListView from "./ListView";
 import GridView from "./GridView";
-
+import { AppstoreOutlined, UnorderedListOutlined } from '@ant-design/icons';
+import Footer from "./footer";
+import { EnvironmentOutlined } from "@ant-design/icons";
+import { DatePicker } from "antd";
+import dayjs from "dayjs";
+import { Button } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 const ListingsPage = () => {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
@@ -29,9 +35,11 @@ const ListingsPage = () => {
     "Yacht": false,
   });
   const [distanceToSki, setDistanceToSki] = useState(10);
+  const [isLoading, setIsLoading] = useState(true);
 
   async function fetchData() {
     try {
+      setIsLoading(true);
       const response = await fetch(
         `http://localhost:8000/property/list-property?checkIn=${checkIn}&checkOut=${checkOut}`
       );
@@ -40,6 +48,9 @@ const ListingsPage = () => {
       setProperties(data.properties);
     } catch (err) {
       console.error("Error fetching data:", err);
+    }
+    finally {
+      setIsLoading(false);
     }
   }
 
@@ -62,15 +73,7 @@ const ListingsPage = () => {
 
 
   const styles: Record<string, React.CSSProperties> = {
-    simpleText: {
-      height: "200px",
-      background: "linear-gradient(135deg, #d68ec9 0%, #c77aba 100%)",
-      position: "relative",
-      overflow: "visible",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
+
     searchContainer: {
       width: "100%",
       display: "flex",
@@ -106,7 +109,7 @@ const ListingsPage = () => {
       letterSpacing: "0.5px",
     },
     input: {
-      padding: "14px 16px",
+      padding: "9px 16px",
       border: "2px solid #e0e0e0",
       borderRadius: "10px",
       fontSize: "16px",
@@ -117,7 +120,7 @@ const ListingsPage = () => {
       boxSizing: "border-box",
     },
     button: {
-      padding: "16px 32px",
+      padding: "23px 33px",
       background: "#e36d68",
       color: "white",
       border: "none",
@@ -302,94 +305,103 @@ const ListingsPage = () => {
       flexDirection: "column",
       gap: "24px",
     },
-    card: {
-      display: "flex",
-      gap: "20px",
-      background: "#fff",
-      borderRadius: "16px",
-      boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-      overflow: "hidden",
-      transition: "transform 0.2s ease",
+
+    viewToggleContainer: {
+      display: "inline-flex",
+      background: "#e36d68",
+      borderRadius: "40px",
+      padding: "6px",
+      alignItems: "center",
+      gap: "6px",
+
+      alignSelf: "flex-end",
     },
-    image: {
-      width: "280px",
-      height: "200px",
-      objectFit: "cover",
-      borderTopLeftRadius: "16px",
-      borderBottomLeftRadius: "16px",
-    },
-    info: {
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
-      padding: "20px",
-      flex: 1,
-    },
-    title: {
-      fontSize: "20px",
-      fontWeight: "600",
-      color: "#333",
-      marginBottom: "8px",
-    },
-    location: {
-      color: "#777",
-      fontSize: "15px",
-      marginBottom: "12px",
-    },
-    details: {
-      fontSize: "14px",
-      color: "#555",
-      marginBottom: "16px",
-    },
-    price: {
-      fontSize: "18px",
-      fontWeight: "600",
-      color: "#e36d68",
-    },
-    viewButton: {
-      background: "#c77aba",
-      color: "#fff",
+
+    toggleButton: {
       border: "none",
-      borderRadius: "8px",
-      padding: "10px 20px",
-      cursor: "pointer",
+      borderRadius: "30px",
+      background: "transparent",
+      color: "white",
       fontWeight: "500",
-      transition: "all 0.3s ease",
-      alignSelf: "flex-start",
+      padding: "8px 18px",
+      cursor: "pointer",
+      fontSize: "14px",
+      display: "flex",
+      alignItems: "center",
+      gap: "6px",
+      // transition: "all 0.3s ease",
     },
+
+    toggleButtonActive: {
+      background: "white",
+      color: "#333",
+      boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+    },
+
+    icon: {
+      fontSize: "16px",
+    },
+
+
   };
 
   return (
     <>
       <Header />
-      <div style={styles.simpleText}></div>
 
       {/* Search Bar Section */}
       <div style={styles.searchContainer}>
         <div style={styles.searchBar}>
           <div style={styles.inputGroup}>
             <label style={styles.label}>Check-in</label>
-            <input
-              type="date"
-              value={checkIn}
-              onChange={(e) => setCheckIn(e.target.value)}
-              style={styles.input}
+            <DatePicker
+              format="YYYY-MM-DD"
+              value={checkIn ? dayjs(checkIn, "YYYY-MM-DD") : null}
+              onChange={(date, dateString) => {
+                if (typeof dateString === "string") {
+                  setCheckIn(dateString);
+                } else {
+                  setCheckIn("");
+                }
+              }}
+              style={{ width: "100%", borderRadius: 8 , ...styles.input}}
+              placeholder="Select date"
             />
           </div>
 
           <div style={styles.inputGroup}>
             <label style={styles.label}>Check-out</label>
-            <input
-              type="date"
-              value={checkOut}
-              onChange={(e) => setCheckOut(e.target.value)}
-              style={styles.input}
+            <DatePicker
+              format="YYYY-MM-DD"
+              value={checkOut ? dayjs(checkOut, "YYYY-MM-DD") : null}
+              onChange={(date, dateString) => {
+                if (typeof dateString === "string") {
+                  setCheckOut(dateString);
+                } else {
+                  setCheckOut("");
+                }
+              }}
+              style={{ width: "100%", borderRadius: 8, ...styles.input }}
+              placeholder="Select date"
             />
           </div>
 
-          <button style={styles.button} onClick={handleSearch}>
+
+          <Button
+            type="primary"
+            icon={<SearchOutlined />}
+            onClick={handleSearch}
+            style={{
+              ...styles.button,
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              borderRadius: "8px",
+            }}
+          >
             Search
-          </button>
+          </Button>
+
         </div>
       </div>
 
@@ -406,7 +418,7 @@ const ListingsPage = () => {
             <div style={styles.filterGroup}>
               <label style={styles.filterLabel}>Location</label>
               <div style={styles.selectWrapper}>
-                <span style={styles.locationIcon}>📍</span>
+                <span style={styles.locationIcon}><EnvironmentOutlined /></span>
                 <select
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
@@ -529,14 +541,51 @@ const ListingsPage = () => {
             </div>
           </div>
         </aside>
+        {/* View Toggle */}
 
         {/* Properties List */}
-        {viewType === 'list' ? (
-          <ListView properties={properties} styles={styles} />
-        ) : (
-          <GridView />
-        )}
+        <div style={{ flex: 1 }}>
+          {properties.length >= 0 && (
+            <div style={styles.viewToggleContainer}>
+              <button
+                onClick={() => setViewType('grid')}
+                style={{
+                  ...styles.toggleButton,
+                  ...(viewType === 'grid' ? styles.toggleButtonActive : {}),
+                }}
+              >
+                <AppstoreOutlined style={{ marginRight: '8px', fontSize: 18, }} />
+                Grid
+              </button>
+              <button
+                onClick={() => setViewType('list')}
+                style={{
+                  ...styles.toggleButton,
+                  ...(viewType === 'list' ? styles.toggleButtonActive : {}),
+                }}
+              >
+                <UnorderedListOutlined style={{ marginRight: '8px', fontSize: 18, }} />
+                List
+              </button>
+            </div>
+          )}
+          {viewType === "list" ? (
+            <ListView
+              properties={properties}
+
+              isLoading={isLoading}
+              skeletonCount={6}
+            />
+          ) : (
+            <GridView properties={properties}
+
+              isLoading={isLoading}
+              skeletonCount={6} />
+          )}
+        </div>
+
       </div>
+      <Footer />
     </>
   );
 };

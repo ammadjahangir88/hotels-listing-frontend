@@ -4,7 +4,7 @@ const Header: React.FC = () => {
   const styles: Record<string, React.CSSProperties> = {
     header: {
       background: "linear-gradient(135deg, #d68ec9 0%, #c77aba 100%)",
-      height: "300px",
+      height: "500px",
       padding: "0",
       position: "relative",
       overflow: "hidden",
@@ -25,8 +25,8 @@ const Header: React.FC = () => {
       fontWeight: "500",
     },
     logoIcon: {
-      width: "30px",
-      height: "30px",
+      width: "50px",
+      height: "50px",
       borderRadius: "50%",
       display: "flex",
       alignItems: "center",
@@ -73,7 +73,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header style={styles.header}>
+    <div style={styles.header}>
       <nav style={styles.nav}>
         <div style={styles.logo}>
           <img
@@ -114,7 +114,7 @@ const Header: React.FC = () => {
       </div>
 
       <div style={styles.mountainShape}></div>
-    </header>
+    </div>
   );
 };
 
