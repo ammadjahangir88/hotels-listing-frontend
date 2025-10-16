@@ -14,12 +14,19 @@ const ListingsPage = () => {
   const [priceRange, setPriceRange] = useState([100, 10000]);
   const [bedrooms, setBedrooms] = useState(2);
   const [bathrooms, setBathrooms] = useState(2);
+
+
   const [accommodationTypes, setAccommodationTypes] = useState({
-    apartment: false,
-    hotel: false,
-    chalet: false,
-    studio: false,
-    lodge: false
+    "Apartment/Hotel": false,
+    "Bungalow": false,
+    "Chalet": false,
+    "Divers": false,
+    "Farmhouse": false,
+    "Holiday village": false,
+    "Residence": false,
+    "Castle/Mansion": false,
+    "Villa": false,
+    "Yacht": false,
   });
   const [distanceToSki, setDistanceToSki] = useState(10);
 
@@ -36,6 +43,7 @@ const ListingsPage = () => {
     }
   }
 
+
   const handleSearch = () => {
     fetchData();
   };
@@ -43,8 +51,7 @@ const ListingsPage = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  type AccommodationType = "apartment" | "hotel" | "chalet" | "studio" | "lodge";
+  type AccommodationType = "Apartment/Hotel" | "Bungalow" | "Chalet" | "Divers" | "Farmhouse" | "Holiday village" | "Residence" | "Castle/Mansion" | "Villa" | "Yacht";
 
   const handleAccommodationTypeChange = (type: AccommodationType) => {
     setAccommodationTypes((prev) => ({
@@ -134,44 +141,69 @@ const ListingsPage = () => {
       gap: "30px",
     },
     sidebar: {
-      width: "280px",
+      width: "320px",
       background: "#fff",
-      borderRadius: "8px",
-      border: "1px solid #e5e5e5",
-      padding: "0",
+      borderRadius: "16px",
+      boxShadow: "0 6px 24px rgba(0,0,0,0.08)",
+      padding: "20px 24px",
       height: "fit-content",
+      display: "flex",
+      flexDirection: "column",
+      gap: "24px",
     },
     filterHeader: {
-      padding: "20px",
-      borderBottom: "1px solid #e5e5e5",
+      borderBottom: "1px solid #f0f0f0",
+      paddingBottom: "10px",
     },
     filterHeading: {
-      fontSize: "16px",
-      fontWeight: "600",
+      fontSize: "18px",
+      fontWeight: "700",
       color: "#333",
-      margin: "0",
     },
     filterContent: {
-      padding: "20px",
+      display: "flex",
+      flexDirection: "column",
+      gap: "28px",
     },
     filterGroup: {
-      marginBottom: "24px",
+      display: "flex",
+      flexDirection: "column",
+      gap: "10px",
     },
+
     filterLabel: {
       fontSize: "14px",
-      fontWeight: "500",
-      color: "#333",
-      marginBottom: "12px",
-      display: "block",
+      fontWeight: "600",
+      color: "#444",
+      marginBottom: "4px",
     },
-    filterInput: {
+    selectWrapper: {
+      position: "relative",
       width: "100%",
-      padding: "10px 12px",
+    },
+    locationIcon: {
+      position: "absolute",
+      left: "12px",
+      top: "50%",
+      transform: "translateY(-50%)",
+      color: "#999",
+      pointerEvents: "none",
+      fontSize: "16px",
+    },
+    filterSelect: {
+      width: "100%",
+      padding: "10px 12px 10px 36px",
       borderRadius: "6px",
       border: "1px solid #e5e5e5",
       outline: "none",
       fontSize: "14px",
       boxSizing: "border-box",
+      appearance: "none",
+      background: "white",
+      cursor: "pointer",
+      backgroundImage: `url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23999' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E")`,
+      backgroundRepeat: "no-repeat",
+      backgroundPosition: "right 12px center",
     },
     priceRangeContainer: {
       marginTop: "12px",
@@ -192,10 +224,18 @@ const ListingsPage = () => {
       outline: "none",
       accentColor: "#e36d68",
     },
+    bedroomBathroomRow: {
+      display: "flex",
+      gap: "16px",
+      marginBottom: '20px'
+    },
+    halfWidth: {
+      flex: 1,
+    },
     counterContainer: {
       display: "flex",
       alignItems: "center",
-      gap: "16px",
+      gap: "12px",
       marginTop: "8px",
     },
     counterButton: {
@@ -232,9 +272,9 @@ const ListingsPage = () => {
       color: "#666",
       marginTop: "4px",
     },
-    checkboxContainer: {
-      display: "flex",
-      flexDirection: "column",
+    checkboxGrid: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
       gap: "10px",
       marginTop: "8px",
     },
@@ -365,13 +405,20 @@ const ListingsPage = () => {
             {/* Location */}
             <div style={styles.filterGroup}>
               <label style={styles.filterLabel}>Location</label>
-              <input
-                type="text"
-                placeholder="Scotland"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                style={styles.filterInput}
-              />
+              <div style={styles.selectWrapper}>
+                <span style={styles.locationIcon}>📍</span>
+                <select
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  style={styles.filterSelect}
+                >
+                  <option value="">Scotland</option>
+                  <option value="edinburgh">Edinburgh</option>
+                  <option value="glasgow">Glasgow</option>
+                  <option value="aberdeen">Aberdeen</option>
+                  <option value="inverness">Inverness</option>
+                </select>
+              </div>
             </div>
 
             {/* Price Range */}
@@ -393,118 +440,77 @@ const ListingsPage = () => {
               </div>
             </div>
 
-            {/* Bedrooms */}
-            <div style={styles.filterGroup}>
-              <label style={styles.filterLabel}>Bedrooms</label>
-              <div style={styles.counterContainer}>
-                <button
-                  style={styles.counterButton}
-                  onClick={() => setBedrooms(Math.max(0, bedrooms - 1))}
-                >
-                  −
-                </button>
-                <span style={styles.counterValue}>{bedrooms}</span>
-                <button
-                  style={{
-                    ...styles.counterButton,
-                    ...styles.counterButtonActive,
-                  }}
-                  onClick={() => setBedrooms(bedrooms + 1)}
-                >
-                  +
-                </button>
+            {/* Bedrooms & Bathrooms in same row */}
+            <div style={styles.bedroomBathroomRow}>
+              {/* Bedrooms */}
+              <div style={styles.halfWidth}>
+                <label style={styles.filterLabel}>Bedrooms</label>
+                <div style={styles.counterContainer}>
+                  <button
+                    style={styles.counterButton}
+                    onClick={() => setBedrooms(Math.max(0, bedrooms - 1))}
+                  >
+                    −
+                  </button>
+                  <span style={styles.counterValue}>{bedrooms}</span>
+                  <button
+                    style={{
+                      ...styles.counterButton,
+                      ...styles.counterButtonActive,
+                    }}
+                    onClick={() => setBedrooms(bedrooms + 1)}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              {/* Bathrooms */}
+              <div style={styles.halfWidth}>
+                <label style={styles.filterLabel}>Bathrooms</label>
+                <div style={styles.counterContainer}>
+                  <button
+                    style={styles.counterButton}
+                    onClick={() => setBathrooms(Math.max(0, bathrooms - 1))}
+                  >
+                    −
+                  </button>
+                  <span style={styles.counterValue}>{bathrooms}</span>
+                  <button
+                    style={{
+                      ...styles.counterButton,
+                      ...styles.counterButtonActive,
+                    }}
+                    onClick={() => setBathrooms(bathrooms + 1)}
+                  >
+                    +
+                  </button>
+                </div>
               </div>
             </div>
 
-            {/* Bathrooms */}
-            <div style={styles.filterGroup}>
-              <label style={styles.filterLabel}>Bathrooms</label>
-              <div style={styles.counterContainer}>
-                <button
-                  style={styles.counterButton}
-                  onClick={() => setBathrooms(Math.max(0, bathrooms - 1))}
-                >
-                  −
-                </button>
-                <span style={styles.counterValue}>{bathrooms}</span>
-                <button
-                  style={{
-                    ...styles.counterButton,
-                    ...styles.counterButtonActive,
-                  }}
-                  onClick={() => setBathrooms(bathrooms + 1)}
-                >
-                  +
-                </button>
-              </div>
-            </div>
-
-            {/* Accommodation Type */}
+            {/* Accommodation Type - 2 per row */}
             <div style={styles.filterGroup}>
               <label style={styles.filterLabel}>Accommodation Type</label>
-              <div style={styles.checkboxContainer}>
-                <div style={styles.checkboxItem}>
-                  <input
-                    type="checkbox"
-                    id="apartment"
-                    checked={accommodationTypes.apartment}
-                    onChange={() => handleAccommodationTypeChange('apartment')}
-                    style={styles.checkbox}
-                  />
-                  <label htmlFor="apartment" style={styles.checkboxLabel}>
-                    Apartment
-                  </label>
-                </div>
-                <div style={styles.checkboxItem}>
-                  <input
-                    type="checkbox"
-                    id="hotel"
-                    checked={accommodationTypes.hotel}
-                    onChange={() => handleAccommodationTypeChange('hotel')}
-                    style={styles.checkbox}
-                  />
-                  <label htmlFor="hotel" style={styles.checkboxLabel}>
-                    Hotel
-                  </label>
-                </div>
-                <div style={styles.checkboxItem}>
-                  <input
-                    type="checkbox"
-                    id="chalet"
-                    checked={accommodationTypes.chalet}
-                    onChange={() => handleAccommodationTypeChange('chalet')}
-                    style={styles.checkbox}
-                  />
-                  <label htmlFor="chalet" style={styles.checkboxLabel}>
-                    Chalet
-                  </label>
-                </div>
-                <div style={styles.checkboxItem}>
-                  <input
-                    type="checkbox"
-                    id="studio"
-                    checked={accommodationTypes.studio}
-                    onChange={() => handleAccommodationTypeChange('studio')}
-                    style={styles.checkbox}
-                  />
-                  <label htmlFor="studio" style={styles.checkboxLabel}>
-                    Studio
-                  </label>
-                </div>
-                <div style={styles.checkboxItem}>
-                  <input
-                    type="checkbox"
-                    id="lodge"
-                    checked={accommodationTypes.lodge}
-                    onChange={() => handleAccommodationTypeChange('lodge')}
-                    style={styles.checkbox}
-                  />
-                  <label htmlFor="lodge" style={styles.checkboxLabel}>
-                    Lodge
-                  </label>
-                </div>
+
+              <div style={styles.checkboxGrid}>
+                {(Object.keys(accommodationTypes) as AccommodationType[]).map((type) => (
+                  <div key={type} style={styles.checkboxItem}>
+                    <input
+                      type="checkbox"
+                      id={type}
+                      checked={accommodationTypes[type]}
+                      onChange={() => handleAccommodationTypeChange(type)}
+                      style={styles.checkbox}
+                    />
+                    <label htmlFor={type} style={styles.checkboxLabel}>
+                      {type}
+                    </label>
+                  </div>
+                ))}
               </div>
             </div>
+
 
             {/* Distance to Ski */}
             <div style={styles.filterGroup}>
