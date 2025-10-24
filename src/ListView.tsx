@@ -1,11 +1,12 @@
 import React from "react";
-
+import { useNavigate } from "react-router-dom";
 interface Property {
   id: number | string;
   name: string;
   region: string;
   country: string;
   max_persons: number;
+  house_code: string,
   bedrooms: number;
   bathrooms: number;
   images?: string[];
@@ -54,6 +55,7 @@ const ListView: React.FC<ListViewProps> = ({
   isLoading = false,
   skeletonCount = 3,
 }) => {
+  const navigate=useNavigate()
   return (
     <>
       <style>
@@ -95,7 +97,7 @@ const ListView: React.FC<ListViewProps> = ({
                     <p style={styles.price}>
                       €{property.first_availability?.price ?? "N/A"} / night
                     </p>
-                    <button style={styles.viewButton}>View Details</button>
+                    <button style={styles.viewButton} onClick={() => navigate(`/hotel-details/${property.house_code}`,{state:{price: property.first_availability?.price}})}>View Details</button>
                   </div>
                 </div>
               </div>

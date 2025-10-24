@@ -9,6 +9,8 @@ import { DatePicker } from "antd";
 import dayjs from "dayjs";
 import { Button } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
+import { Slider } from "antd"; // make sure this is imported at the top
+
 const ListingsPage = () => {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
@@ -364,7 +366,7 @@ const ListingsPage = () => {
                   setCheckIn("");
                 }
               }}
-              style={{ width: "100%", borderRadius: 8 , ...styles.input}}
+              style={{ width: "100%", borderRadius: 8, ...styles.input }}
               placeholder="Select date"
             />
           </div>
@@ -441,13 +443,19 @@ const ListingsPage = () => {
                   <span>${priceRange[0]}</span>
                   <span>${priceRange[1]}</span>
                 </div>
-                <input
-                  type="range"
-                  min="100"
-                  max="10000"
-                  value={priceRange[1]}
-                  onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
-                  style={styles.rangeSlider}
+
+                <Slider
+                  range
+                  min={100}
+                  max={10000}
+                  step={50}
+                  value={priceRange}
+                  onChange={(value) => setPriceRange(value)}
+                  trackStyle={[{ backgroundColor: "#e36d68" }]}
+                  handleStyle={[
+                    { borderColor: "#e36d68" },
+                    { borderColor: "#e36d68" },
+                  ]}
                 />
               </div>
             </div>
@@ -524,21 +532,24 @@ const ListingsPage = () => {
             </div>
 
 
-            {/* Distance to Ski */}
+            {/* Distance to lift/piste and Ski-in/Ski-out */}
             <div style={styles.filterGroup}>
               <label style={styles.filterLabel}>Distance to lift/piste and Ski-in/Ski-out</label>
               <div style={styles.sliderContainer}>
-                <input
-                  type="range"
-                  min="0"
-                  max="50"
+                <Slider
+                  min={0}
+                  max={50}
+                  step={1}
                   value={distanceToSki}
-                  onChange={(e) => setDistanceToSki(parseInt(e.target.value))}
-                  style={styles.rangeSlider}
+                  onChange={(value) => setDistanceToSki(value)}
+                  tooltip={{ formatter: (value) => `${value} km` }}
+                  trackStyle={[{ backgroundColor: "#e36d68" }]}
+                  handleStyle={[{ borderColor: "#e36d68" }]}
                 />
                 <div style={styles.sliderValue}>{distanceToSki} km</div>
               </div>
             </div>
+
           </div>
         </aside>
         {/* View Toggle */}

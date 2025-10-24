@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 
 import ListingsPage from "./ListingsPage"
+import HotelDetails from "./HotelDetails"
 function App() {
 
 
@@ -13,6 +14,7 @@ function App() {
       <Routes>
 
          <Route path="/" element={<ListingsPage />} />
+         <Route path="hotel-details/:id" element={<HotelDetails />} />
 
       </Routes>
     
